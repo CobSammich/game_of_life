@@ -1,5 +1,4 @@
-# Conway's Game of Life
-
+# [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
 ## Four Rules
 Conway's game of life follows four rules that define how the cells interact with their
