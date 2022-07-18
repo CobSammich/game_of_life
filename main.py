@@ -4,11 +4,11 @@ Driver for the
 TODO:
 * Read in file that defines the initial state
 * Animate with matlpotlib or another framework?
+* Function docstrings
 """
-import numpy as np
-import matplotlib.pyplot as plt
 from board import board
 import sys
+import time
 
 BOARD_HEIGHT = 20
 BOARD_WIDTH = 20
@@ -33,10 +33,13 @@ def main() -> None:
     game_board.flip_cell(3, 3)
 
     while True:
+        print("sleeping...")
+        time.sleep(0.5)
         try:
             game_board.show()
             game_board.update()
         except KeyboardInterrupt as e:
+            game_board.clean_up()
             sys.exit()
 
 if __name__ == "__main__":

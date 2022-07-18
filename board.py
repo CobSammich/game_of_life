@@ -1,6 +1,9 @@
-import numpy as np
-import matplotlib.pyplot as plt
 import ipdb
+import matplotlib as mpl
+mpl.use('TkAgg')
+import matplotlib.pyplot as plt
+plt.ion()
+import numpy as np
 
 class board:
 
@@ -8,22 +11,34 @@ class board:
         self.height = height
         self.width = width
         self.board = np.zeros((self.height, self.width), dtype=bool)
+        self.fig = plt.figure()
+        self.ax = self.fig.add_subplot()
+        # This is set in the show call
+        self.imshow = None
+        self.initialize_plot()
 
     def __str__(self) -> str:
+        # TODO: print the game board
         pass
 
-    def show(self) -> None:
-        fig, ax = plt.subplots()
+    def initialize_plot(self) -> None:
         xticks = np.arange(0, self.width  + 1) - 0.5
         yticks = np.arange(0, self.height + 1) - 0.5
-        ax.imshow(self.board, cmap="gray")
-        ax.grid()
-        ax.set_xticks(xticks)
-        ax.set_yticks(yticks)
-        ax.axes.xaxis.set_ticklabels([])
-        ax.axes.yaxis.set_ticklabels([])
-        plt.show()
-        plt.close(fig)
+        self.ax.grid(alpha=0.5)
+        self.ax.set_xticks(xticks)
+        self.ax.set_yticks(yticks)
+        self.ax.axes.xaxis.set_ticklabels([])
+        self.ax.axes.yaxis.set_ticklabels([])
+
+
+    def show(self) -> None:
+        if self.imshow is None:
+            self.imshow = self.ax.imshow(self.board, cmap="gray")
+        else:
+            self.imshow.set_data(self.board)
+        self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
+
 
     def update(self) -> None:
         new_board = np.zeros((self.height, self.width), dtype=bool)
@@ -31,6 +46,7 @@ class board:
             for col in range(self.width):
                 new_board[row, col] = self.update_cell(col, row)
         self.board = new_board
+
 
     def update_cell(self, x: int, y: int) -> bool:
         live_cell = self.board[y, x]
@@ -86,3 +102,6 @@ class board:
 
     def get_reversed_state(self, x: int, y: int) -> bool:
         return not self.board[y, x]
+
+    def clean_up(self) -> None:
+        plt.close(self.fig)
