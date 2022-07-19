@@ -16,7 +16,7 @@ class board:
         self.generation = 0
 
         # Matplotlib specific fields
-        self.fig = plt.figure()
+        self.fig = plt.figure(figsize=(12,8))
         self.ax = self.fig.add_subplot()
         # This is set in the show call
         self.imshow = None
@@ -45,11 +45,11 @@ class board:
             self.imshow = self.ax.imshow(self.board, cmap="gray_r")
         else:
             self.imshow.set_data(self.board)
-        self.fig.suptitle(f"Gen #: {self.generation}")
+        self.fig.suptitle(f"Gen #: {self.generation}", fontsize=20)
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
         if save:
-            self.fig.savefig(f"./images/{self.generation:03d}.jpg", dpi=256)
+            self.fig.savefig(f"./images/{self.generation:03d}.pdf")
 
 
     def update(self) -> None:
