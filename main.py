@@ -14,6 +14,7 @@ import random
 BOARD_HEIGHT = 100
 BOARD_WIDTH = 100
 SAVE_IMAGES = True
+N_GENERATIONS = 50
 
 
 def main() -> None:
@@ -45,13 +46,13 @@ def main() -> None:
         user_input = input("Type 'y' to start simulation\n")
 
 
-    while True:
+    while game_board.generation < N_GENERATIONS:
         #print("sleeping...")
         time.sleep(0.1)
         try:
             game_board.update()
             game_board.show(SAVE_IMAGES)
-        except KeyboardInterrupt as e:
+        except KeyboardInterrupt as _:
             game_board.clean_up()
             sys.exit()
 
