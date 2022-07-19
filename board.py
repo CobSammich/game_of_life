@@ -1,9 +1,11 @@
-import ipdb
+
 import matplotlib as mpl
 mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 plt.ion()
+
 import numpy as np
+import os
 
 class board:
 
@@ -11,11 +13,15 @@ class board:
         self.height = height
         self.width = width
         self.board = np.zeros((self.height, self.width), dtype=bool)
+        self.generation = 0
+
+        # Matplotlib specific fields
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot()
         # This is set in the show call
         self.imshow = None
         self.initialize_plot()
+        os.makedirs("./images", exist_ok=True)
 
     def __str__(self) -> str:
         # TODO: print the game board
@@ -29,15 +35,21 @@ class board:
         self.ax.set_yticks(yticks)
         self.ax.axes.xaxis.set_ticklabels([])
         self.ax.axes.yaxis.set_ticklabels([])
+        self.ax.tick_params(axis='y', colors='white')
+        self.ax.tick_params(axis='x', colors='white')
+        self.fig.tight_layout(rect=[0, 0.03, 1, 0.95])
 
 
-    def show(self) -> None:
+    def show(self, save: bool = False) -> None:
         if self.imshow is None:
-            self.imshow = self.ax.imshow(self.board, cmap="gray")
+            self.imshow = self.ax.imshow(self.board, cmap="gray_r")
         else:
             self.imshow.set_data(self.board)
+        self.fig.suptitle(f"Gen #: {self.generation}")
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
+        if save:
+            self.fig.savefig(f"./images/{self.generation:03d}.jpg", dpi=256)
 
 
     def update(self) -> None:
@@ -46,6 +58,7 @@ class board:
             for col in range(self.width):
                 new_board[row, col] = self.update_cell(col, row)
         self.board = new_board
+        self.generation += 1
 
 
     def update_cell(self, x: int, y: int) -> bool:
