@@ -3,8 +3,10 @@ Driver for the
 
 TODO:
 * Read in file that defines the initial state
-* Animate with matlpotlib or another framework?
 * Function docstrings
+* board has two instances known - no need to create a new large array every time
+  (takes ~0.34 seconds before, 16.83 seconds for 50 generations) - this doesn't speed it up
+* Animate with another framework?
 """
 from board import board
 import sys
@@ -13,7 +15,7 @@ import random
 
 BOARD_HEIGHT = 100
 BOARD_WIDTH = 100
-SAVE_IMAGES = True
+SAVE_IMAGES = False
 N_GENERATIONS = 50
 
 
@@ -46,15 +48,22 @@ def main() -> None:
         user_input = input("Type 'y' to start simulation\n")
 
 
+    t0 = time.perf_counter()
     while game_board.generation < N_GENERATIONS:
-        #print("sleeping...")
-        time.sleep(0.1)
         try:
+            t0_0 = time.perf_counter()
+
             game_board.update()
             game_board.show(SAVE_IMAGES)
+
+            t1_0 = time.perf_counter()
+            print(f"Time for single generation: {t1_0 - t0_0:.5f}")
         except KeyboardInterrupt as _:
             game_board.clean_up()
             sys.exit()
+    game_board.clean_up()
+    t1 = time.perf_counter()
+    print(f"Time for {game_board.generation} generations: {t1 - t0:.5f}")
 
 if __name__ == "__main__":
     main()

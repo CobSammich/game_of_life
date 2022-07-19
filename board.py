@@ -13,6 +13,8 @@ class board:
         self.height = height
         self.width = width
         self.board = np.zeros((self.height, self.width), dtype=bool)
+        # two instances - so we don't need to create a new matrix every update
+        self.next_board = np.zeros((self.height, self.width), dtype=bool)
         self.generation = 0
 
         # Matplotlib specific fields
@@ -53,11 +55,11 @@ class board:
 
 
     def update(self) -> None:
-        new_board = np.zeros((self.height, self.width), dtype=bool)
+        #self.next_board = np.zeros((self.height, self.width), dtype=bool)
         for row in range(self.height):
             for col in range(self.width):
-                new_board[row, col] = self.update_cell(col, row)
-        self.board = new_board
+                self.next_board[row, col] = self.update_cell(col, row)
+        self.board = self.next_board.copy()
         self.generation += 1
 
 
