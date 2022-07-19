@@ -6,6 +6,7 @@ plt.ion()
 
 import numpy as np
 import os
+import ipdb
 
 class board:
 
@@ -14,7 +15,6 @@ class board:
         self.width = width
         self.board = np.zeros((self.height, self.width), dtype=bool)
         # two instances - so we don't need to create a new matrix every update
-        self.next_board = np.zeros((self.height, self.width), dtype=bool)
         self.generation = 0
 
         # Matplotlib specific fields
@@ -55,11 +55,12 @@ class board:
 
 
     def update(self) -> None:
-        #self.next_board = np.zeros((self.height, self.width), dtype=bool)
-        for row in range(self.height):
-            for col in range(self.width):
-                self.next_board[row, col] = self.update_cell(col, row)
-        self.board = self.next_board.copy()
+        # Update each cell
+        buff = np.array([self.update_cell(col, row)
+                            for row in range(self.height)
+                            for col in range(self.width)]
+                       ).reshape(self.height, self.width)
+        self.board = np.array(buff).reshape(self.height, self.width)
         self.generation += 1
 
 
