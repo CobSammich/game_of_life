@@ -2,6 +2,8 @@
 There is a [wiki](https://conwaylife.com/wiki/) that has a lot of information regarding the Game of
 Life.
 
+![](life.gif)
+
 ## Three Rules
 Conway's game of life boils down to following three rules that define how the cells interact with
 their surroundings.
